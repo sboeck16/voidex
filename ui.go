@@ -19,6 +19,7 @@ var (
 	// action buttons
 	actionButtons        = map[int]*gameutils.Button{}
 	displayActionButtons = map[int]bool{}
+	reachedButtonGoal    = -1
 )
 
 func init() {
@@ -71,14 +72,23 @@ func init() {
 updates the dispay of the buttons
 */
 func updateButtons() {
-	// TEST
-	if firstAddBtn {
-		firstAddBtn = false
-		for buildID, btn := range actionButtons {
-			displayActionButtons[buildID] = true
-			boardButtons.RegisterObj(btn, nil, nil, nil, nil)
+	// check if a goal has been reached
+	if reachedButtonGoal+1 < len(goalsForButtons) {
+		if checkGoal(reachedButtonGoal + 1) {
+			bttnIDs := goalsForButtons[reachedButtonGoal+1].unlocksBntID
+			for _, bttnID := range bttnIDs {
+				displayActionButtons[bttnID] = true
+				bttn := actionButtons[bttnID]
+				boardButtons.RegisterObj(bttn, nil, nil, nil, bttn)
+			}
+			reachedButtonGoal++
+			if gameStats.buttonLevel < reachedButtonGoal {
+				gameStats.buttonLevel = reachedButtonGoal
+			}
 		}
 	}
+
+	// update display
 	for buildID, btn := range actionButtons {
 		msg := ""
 		if buildID < collectorBuilding {
@@ -127,20 +137,35 @@ func newDisplayButton(x, y float64) *gameutils.Button {
 
 func newActionButton(
 	x, y float64, w, h, action, with int) *gameutils.Button {
-	ret := gameutils.NewButton(x, y, w, h, th)
-	//ret := gameutils.NewButton(x, y, w, h, actionButtonHandle(action, with))
+	ret := gameutils.NewButton(x, y, w, h, actionButtonHandle(action, with))
 	ret.SetColorAndFont(statDisplayTextCol, statDisplayBGCol, statDisplayFont)
 
 	return ret
 
 }
 
+/*
+Returns buttons that can be displayed if goal is reached. utility function,
+btnlvl is not checked for out of bound in goals array!
+*/
+func checkGoal(btnlvl int) bool {
+	if btnlvl < gameStats.buttonLevel {
+		return true
+	}
+	for res, valNeed := range goalsForButtons[btnlvl].ressourcesNeeded {
+		if valHave, ok := gameStats.Ressources[res]; !ok || valNeed > valHave {
+			return false
+		}
+	}
+	return true
+}
+
 // #############################################################################
 // #							Action
 // #############################################################################
 
-func actionButtonHandle(what, with int) func(*gameutils.ClickObject, eb.MouseButton) {
-	switch what {
+func actionButtonHandle(action, with int) func(*gameutils.ClickObject, eb.MouseButton) {
+	switch action {
 	case buy:
 		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { actionBuy(with) }
 	case addActive:
@@ -153,22 +178,18 @@ func actionButtonHandle(what, with int) func(*gameutils.ClickObject, eb.MouseBut
 
 func actionBuy(building int) {
 
-	deb("clicked", building)
+	deb("clicked B", building)
 	updateButtons()
 }
 
 func actionActivateBuilding(building int) {
 
-	deb("clicked", building)
+	deb("clicked +", building)
 	updateButtons()
 }
 
 func deactivateBuilding(building int) {
 
-	deb("clicked", building)
+	deb("clicked -", building)
 	updateButtons()
-}
-
-func th(a *gameutils.ClickObject, b eb.MouseButton) {
-	deb("!!", b, a)
 }

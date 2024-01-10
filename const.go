@@ -7,6 +7,8 @@ import (
 
 const (
 	// ressources
+	// ----------
+	// matter, ...
 	matter = iota
 	fabric
 	rareMatter
@@ -34,40 +36,8 @@ const (
 	collectorAdd            = 1 << 14
 	collectorSub            = 1 << 15
 
-	/*
-		// buildings
-		matterCollector = iota
-		rareMatterCollector
-		exoticMatterCollector
-		materialFabricator
-		materialFabricatorActive
-		componentFactory
-		componentFactoryActive
-		modulCreator
-		moduleCreatorActive
-		structureBuilder
-		structureBuilderActive
-		fighterHangars
-		fighterHangarsActive
-		shipyards
-		shipyardsActive
-		stationConstructor
-		stationConstructorActive
-		fighterBays
-		landingfields
-		fleetCommands
-		maxBuildings
-		// for clicking
-		clickMatterPseudo
-		clickRarePseudo
-		clickExoticPseudo
-		clickComponentsPseudo
-		clickModulsPseudo
-		clickExoticMatterPseudo
-		clickStructuresPseudo
-	*/
-
 	// ship inventory
+	// --------------
 	// Fighter
 	ftrEngines = iota
 	ftrArmor
@@ -194,7 +164,7 @@ const (
 
 	actionButtonWidth        = 160
 	actionButtonAddSubWidth  = 20
-	actionButtonHeight       = 18
+	actionButtonHeight       = 30
 	actionButtonNextRowSpace = 5
 	actionButtonSpace        = 10
 )
