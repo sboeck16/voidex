@@ -22,6 +22,7 @@ var (
 				matter + collectorBuilding,
 				matter + collectorBuilding + collectorAdd,
 				matter + collectorBuilding + collectorSub,
+				fabric,
 			},
 		},
 		{

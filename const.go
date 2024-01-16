@@ -5,6 +5,23 @@ import (
 	"voidex/graphics"
 )
 
+// #############################################################################
+// #							Global Game
+// #############################################################################
+
+const (
+	ticksPerSec = 60.0 // defined by ebitengine
+
+	// UpdateOnEveryTick counter when game updates 6 -> every 0.1s
+	updateOnEveryTick = 6.0
+	// holds updates per second
+	updatesPerSecond = ticksPerSec / updateOnEveryTick
+)
+
+// #############################################################################
+// #							Ressources
+// #############################################################################
+
 const (
 	// ressources
 	// ----------
@@ -153,6 +170,18 @@ var (
 // #############################################################################
 
 const (
+	// generic string constants
+	sp = " "
+	nl = "\n"
+
+	// strings
+	strInvalidCosts = "-invalid-"
+
+	costSymbolAmountDivide = ":"
+	costStringsJoin        = ","
+	costDisplayFormat      = 'f'
+	costDisplayPrec        = 1
+
 	statDisplayDivide = ": "
 	statDisplayFormat = 'f'
 	statDisplayPrec   = 1
@@ -162,9 +191,17 @@ const (
 	statDisplayHeight       = 18
 	statDisplayNextRowSpace = 3
 
+	actionButtonActive1 = "("
+	actionButtonActive2 = "|"
+	actionButtonActive3 = ")"
+
+	actionStrCollect = "collect"
+	actionStrAdd     = "+"
+	actionStrSub     = "-"
+
 	actionButtonWidth        = 160
 	actionButtonAddSubWidth  = 20
-	actionButtonHeight       = 30
+	actionButtonHeight       = 34
 	actionButtonNextRowSpace = 5
 	actionButtonSpace        = 10
 )
@@ -208,4 +245,8 @@ var (
 	statDisplayFont    = gameutils.TextFontSmall
 	statDisplayBGCol   = graphics.ColorBlack
 	statDisplayTextCol = graphics.ColorWhite
+
+	actionDisplayFont    = gameutils.CreateFontMust(13, 72)
+	actionDisplayBGCol   = graphics.ColorBlack
+	actionDisplayTextCol = graphics.ColorWhite
 )

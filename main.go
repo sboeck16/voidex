@@ -12,7 +12,7 @@ var (
 	// holds the state the game is in
 	gameStats = NewGameStats()
 	// holds the increase on big tick
-	incrDecrOnBigUpd = newIncStruct()
+	incrDecrOnBigUpd = []*cost{}
 	// hold game global for easy access
 	game *gameutils.Game
 	// holds with and height for game, TODO
@@ -36,9 +36,6 @@ var (
 	mainHeight = 500
 	mainOffX   = 580.0
 	mainOffY   = 90.0
-
-	// UpdateOnEveryTick counter when game updates 6 -> every 0.1s
-	UpdateOnEveryTick = 6
 
 	// holds boards for easy access
 	boardDisplayStat *gameutils.Board
@@ -108,7 +105,7 @@ func initGame() *gameutils.Game {
 
 func gameUpdate(tick int) {
 
-	if tick%UpdateOnEveryTick == 0 {
+	if tick%updateOnEveryTick == 0 {
 		// update stats
 		updateStats()
 
@@ -153,7 +150,20 @@ utility function for testing visuals and progressing. creates gamestats TODO
 func setStartUpGame() {
 	gameStats = NewGameStats()
 	for i := 0; i < maxResources; i++ {
-		gameStats.Ressources[i] = 0
+		gameStats.Ressources[i] = 20
 	}
+}
 
+/*
+TODO! error handling and logging
+*/
+func checkError(errs ...error) bool {
+	ret := false
+	for _, err := range errs {
+		if err != nil {
+			ret = true
+			deb(err.Error())
+		}
+	}
+	return ret
 }

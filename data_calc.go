@@ -1,22 +1,9 @@
 package main
 
 var (
-	// holds the cost for first buy building->resource->mult
-	costStart = map[int]map[int]float64{
-		matter + collectorBuilding: {
-			fabric: 5,
-		},
-	}
 
-	// holds the multiplicator by level building->resource->mult
-	costMult = map[int]map[int]float64{
-		matter + collectorBuilding: {
-			fabric: 1.5,
-		},
-	}
-
-	// createCost holds the manual transformation costs
-	createCost = map[int]map[int]float64{
+	// base cost for everything
+	baseCost = map[int]map[int]float64{
 		matter: {},
 		fabric: {
 			matter: 5,
@@ -45,6 +32,17 @@ var (
 		},
 		// science
 		science: {},
+		// buildings
+		matter + collectorBuilding: {
+			fabric: 5,
+		},
+	}
+
+	// holds the multiplicator by level building->resource->mult
+	costMult = map[int]map[int]float64{
+		matter + collectorBuilding: {
+			fabric: 1.5,
+		},
 	}
 
 	// inventory cost

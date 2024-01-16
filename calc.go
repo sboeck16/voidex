@@ -1,54 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"math"
+	"strconv"
+	"strings"
 )
-
-var ()
-
-func init() {
-
-}
-
-/*
-holds info what to add to game stats and how
-*/
-type inc struct {
-	add  map[int]float64
-	cost []*cost
-}
-
-/*
-creates new inc object and initializes maps.
-*/
-func newIncStruct() *inc {
-	ret := new(inc)
-	ret.add = make(map[int]float64)
-	ret.cost = []*cost{}
-	return ret
-}
 
 /*
 holds the cost for a single item
 */
 type cost struct {
-	pay  map[int]float64
-	get  float64
-	item int
+	ressAdd map[int]float64 // use negative for cost
+	item    int
 }
 
 func updateStats() {
-	// first add all without a cost
-	for addRes, addVal := range incrDecrOnBigUpd.add {
-		gameStats.Ressources[addRes] += addVal
-	}
 
 	// now add the ressource we can afford
-	for _, cst := range incrDecrOnBigUpd.cost {
+	for _, cst := range incrDecrOnBigUpd {
 		// check
 		canAfford := true
-		for payRes, payAmount := range cst.pay {
-			if gameStats.Ressources[payRes] < payAmount {
+		for payRes, payAmount := range cst.ressAdd {
+			if gameStats.Ressources[payRes]+payAmount < 0 {
 				canAfford = false
 				break
 			}
@@ -56,9 +30,8 @@ func updateStats() {
 		if !canAfford {
 			continue
 		}
-		for payRes, payAmount := range cst.pay {
-			gameStats.Ressources[payRes] -= payAmount
-			gameStats.Ressources[cst.item] += cst.get
+		for payRes, payAmount := range cst.ressAdd {
+			gameStats.Ressources[payRes] += payAmount
 		}
 	}
 }
@@ -71,9 +44,9 @@ func updateStats() {
 calcCost calculates cost and returns a map with materials -> cost
 */
 func calcCost(building, targetlevel int) map[int]float64 {
-	startC, ok1 := costStart[building]
+	startC, ok1 := baseCost[building]
 	multC, ok2 := costMult[building]
-	if targetlevel < 1 || !ok1 || !ok2 {
+	if targetlevel < 1 || !ok1 {
 		// MAYBE log error?
 		return nil
 	}
@@ -82,6 +55,11 @@ func calcCost(building, targetlevel int) map[int]float64 {
 	// copy start values
 	for mat, cost := range startC {
 		ret[mat] = cost
+	}
+
+	// no multipliers
+	if !ok2 {
+		return ret
 	}
 
 	// multiply -> MAYBE more checks needed? -> performance?
@@ -93,6 +71,80 @@ func calcCost(building, targetlevel int) map[int]float64 {
 }
 
 /*
+utility function to check and buy if possible
+*/
+func checkAndBuy(id int) {
+
+	tLevel := 0
+	if id >= collectorBuilding {
+		tLevel, _ = gameStats.Buildings[id]
+	}
+	// next level should be bought or "level 1 ressource" clicked
+	tLevel++
+
+	cost := calcCost(id, tLevel)
+	if cost == nil {
+		checkError(fmt.Errorf("no cost for %+v", id))
+		return
+	}
+
+	canAfford := true
+	for res, amount := range cost {
+		if amount > gameStats.Ressources[res] {
+			canAfford = false
+			break
+		}
+	}
+
+	// cant do anything
+	if !canAfford {
+		return
+	}
+
+	// pay
+	for res, amount := range cost {
+		gameStats.Ressources[res] -= amount
+	}
+
+	// get
+	if id >= collectorBuilding {
+		gameStats.Buildings[id]++
+		gameStats.BuildingsActive[id]++
+		updateTickIncrease()
+		updateButtons()
+	} else {
+		gameStats.Ressources[id]++
+	}
+	updateStats()
+}
+
+/*
+sorts and stringify calculated costs
+*/
+func calcCostToString(building, targetlevel int) string {
+
+	costs := calcCost(building, targetlevel)
+	if costs == nil {
+		return strInvalidCosts
+	}
+
+	ret := []string{}
+
+	for cost, symbol := range costSymbol {
+		if val, ok := costs[cost]; ok {
+			ret = append(ret, symbol+costSymbolAmountDivide+
+				strconv.FormatFloat(val, costDisplayFormat, costDisplayPrec, 64))
+		}
+	}
+
+	return strings.Join(ret, costStringsJoin)
+}
+
+// #############################################################################
+// #							Gains on UPDATE
+// #############################################################################
+
+/*
 calcUpdate recalculates the global update struct that holds all increasing or
 decreasing values.
 
@@ -100,6 +152,49 @@ decreasing values.
 * add %, all added and aplied to base production
 * multiply, multiply through
 */
-func calcUpdate() {
+func updateTickIncrease() {
+	// reset all
+	incrDecrOnBigUpd = []*cost{}
 
+	for buildID, amountActive := range gameStats.BuildingsActive {
+		// TODO ship ressources will not work here
+		if amountActive == 0 {
+			continue
+		}
+
+		ressBase := map[int]float64{}
+		ressInc := map[int]float64{}
+		ressMult := map[int]float64{}
+
+		// which ressource
+		ress := buildID - collectorBuilding
+		ressBase[ress] = 1.0
+		ressInc[ress] = 1.0
+		ressMult[ress] = 1.0
+
+		// cost
+		if _, ok := baseCost[ress]; !ok {
+			checkError(fmt.Errorf("no cost for ressource id: %+v", ress))
+			continue
+		}
+
+		for pay, amount := range baseCost[ress] {
+			ressBase[pay] = amount * -1
+			ressInc[pay] = 1.0
+			ressMult[pay] = 1.0
+		}
+
+		/*
+			for _, sci := range gameStats.UnlockedScience{
+			}
+		*/
+		newC := new(cost)
+		newC.item = ress
+		newC.ressAdd = make(map[int]float64)
+		for r, base := range ressBase {
+			base *= float64(amountActive) / updatesPerSecond
+			newC.ressAdd[r] = base * ressInc[r] * ressMult[r]
+		}
+		incrDecrOnBigUpd = append(incrDecrOnBigUpd, newC)
+	}
 }

@@ -124,34 +124,33 @@ var (
 	ButtonTextCol = graphics.ColorWhite
 
 	// TextFontMiddle holds ebiten example font in middle size
-	TextFontMiddle font.Face
+	TextFontMiddle = CreateFontMust(24, 72)
 	// TextFontSmall holds ebiten example font in small size
-	TextFontSmall font.Face
+	TextFontSmall = CreateFontMust(16, 72)
 )
 
-// MAYBE provide, make font modul or move to graphics?
-func init() {
-
-	// initialize font for buttons
+/*
+CreateFontUtil creates a usable font from parameters.
+*/
+func CreateFontUtil(size, dpi float64) (font.Face, error) {
 	tt, err := opentype.Parse(fonts.MPlus1pRegular_ttf)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	TextFontMiddle, err = opentype.NewFace(tt, &opentype.FaceOptions{
-		Size:    24,
-		DPI:     72,
+	return opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    size,
+		DPI:     dpi,
 		Hinting: font.HintingFull,
 	})
-	if err != nil {
-		panic(err) // TODO error handling
-	}
-	TextFontSmall, err = opentype.NewFace(tt, &opentype.FaceOptions{
-		Size:    16,
-		DPI:     72,
-		Hinting: font.HintingFull,
-	})
-	if err != nil {
-		panic(err) // TODO error handling
-	}
+}
 
+/*
+CreateFontMust creates a font from parameters or panics.
+*/
+func CreateFontMust(size, dpi float64) font.Face {
+	ret, err := CreateFontUtil(size, dpi)
+	if err != nil {
+		panic(err) // TODO error handling?
+	}
+	return ret
 }

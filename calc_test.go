@@ -46,26 +46,5 @@ func TestCalc(t *testing.T) {
 }
 
 func TestInc(t *testing.T) {
-	gameStats = NewGameStats()
-	for i := 0; i < maxResources; i++ {
-		gameStats.Ressources[i] = 10
-	}
-
-	c := new(cost)
-	c.pay = map[int]float64{matter: .5}
-	c.get = 0.5
-	c.item = fabric
-	incrDecrOnBigUpd.cost = []*cost{c}
-	incrDecrOnBigUpd.add[rareMatter] = 1
-
-	for i := 0; i < 30; i++ {
-		updateStats()
-	}
-	if gameStats.Ressources[matter] != 0.0 ||
-		gameStats.Ressources[fabric] != 20.0 ||
-		gameStats.Ressources[rareMatter] != 40.0 {
-		deb(gameStats.Ressources)
-		t.Error("update calc is wrong")
-	}
 
 }

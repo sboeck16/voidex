@@ -9,7 +9,8 @@ type GameStats struct {
 	Ressources map[int]float64
 
 	// buildings
-	Buildings map[int]int
+	Buildings       map[int]int
+	BuildingsActive map[int]int
 
 	// unlocked science nodes
 	UnlockedScience []int
@@ -46,6 +47,7 @@ func NewGameStats() *GameStats {
 
 	ret.Ressources = make(map[int]float64)
 	ret.Buildings = make(map[int]int)
+	ret.BuildingsActive = make(map[int]int)
 	ret.maxResources = make(map[int]float64)
 
 	ret.FighterLoadOut = GetDefaultFtrLoadout()

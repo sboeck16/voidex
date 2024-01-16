@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	firstAddBtn = true
+	firstAddBtn = 0
 	// boards are located in main.go
 
 	// holds the stat display buttons
@@ -72,6 +72,7 @@ func init() {
 updates the dispay of the buttons
 */
 func updateButtons() {
+
 	// check if a goal has been reached
 	if reachedButtonGoal+1 < len(goalsForButtons) {
 		if checkGoal(reachedButtonGoal + 1) {
@@ -92,13 +93,22 @@ func updateButtons() {
 	for buildID, btn := range actionButtons {
 		msg := ""
 		if buildID < collectorBuilding {
-			msg = "collect " + toStringRessource[buildID]
+			msg = actionStrCollect + sp + toStringRessource[buildID]
+			msg += nl + calcCostToString(buildID, 1)
 		} else if buildID&collectorAdd > 0 {
-			msg = "+"
+			msg = actionStrAdd
 		} else if buildID&collectorSub > 0 {
-			msg = "-"
+			msg = actionStrSub
 		} else {
+			lvl, _ := gameStats.Buildings[buildID]
+			// MAYBE refactor, string concat or buffer write?
 			msg = toStringBuildings[buildID]
+			msg += actionButtonActive1
+			msg += strconv.Itoa(gameStats.BuildingsActive[buildID])
+			msg += actionButtonActive2
+			msg += strconv.Itoa(gameStats.Buildings[buildID])
+			msg += actionButtonActive3 + nl
+			msg += calcCostToString(buildID, lvl+1)
 		}
 		btn.SetText(5, 15, msg)
 	}
@@ -138,10 +148,10 @@ func newDisplayButton(x, y float64) *gameutils.Button {
 func newActionButton(
 	x, y float64, w, h, action, with int) *gameutils.Button {
 	ret := gameutils.NewButton(x, y, w, h, actionButtonHandle(action, with))
-	ret.SetColorAndFont(statDisplayTextCol, statDisplayBGCol, statDisplayFont)
+	ret.SetColorAndFont(
+		actionDisplayTextCol, actionDisplayBGCol, actionDisplayFont)
 
 	return ret
-
 }
 
 /*
@@ -167,19 +177,13 @@ func checkGoal(btnlvl int) bool {
 func actionButtonHandle(action, with int) func(*gameutils.ClickObject, eb.MouseButton) {
 	switch action {
 	case buy:
-		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { actionBuy(with) }
+		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { checkAndBuy(with) }
 	case addActive:
 		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { actionActivateBuilding(with) }
 	case subActive:
 		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { actionActivateBuilding(with) }
 	}
 	return nil
-}
-
-func actionBuy(building int) {
-
-	deb("clicked B", building)
-	updateButtons()
 }
 
 func actionActivateBuilding(building int) {
