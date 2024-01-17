@@ -40,7 +40,7 @@ const (
 	greenExp
 	blueExp
 	// saved ships
-	fighters
+	fighters // always the first ship!
 	capitals
 	stations
 	maxResources
@@ -48,10 +48,9 @@ const (
 	// buildings flag
 	collectorBuilding       = 1 << 10
 	collectorBuildingActive = 1 << 11
-	shipBuilding            = 1 << 12
-	shipBuildingMax         = 1 << 13
-	collectorAdd            = 1 << 14
-	collectorSub            = 1 << 15
+	shipBuildingMax         = 1 << 12
+	collectorAdd            = 1 << 13
+	collectorSub            = 1 << 14
 
 	// ship inventory
 	// --------------

@@ -1,5 +1,8 @@
 package main
 
+// #############################################################################
+// #							Base cost
+// #############################################################################
 var (
 
 	// base cost for everything
@@ -30,21 +33,105 @@ var (
 			components: 20,
 			moduls:     10,
 		},
-		// science
-		science: {},
+
 		// buildings
 		matter + collectorBuilding: {
 			fabric: 5,
 		},
+		fabric + collectorBuilding: {
+			rareMatter: 5,
+			fabric:     10,
+		},
+		rareMatter + collectorBuilding: {
+			components: 5,
+			rareMatter: 10,
+			fabric:     100,
+		},
+		components + collectorBuilding: {
+			moduls:     5,
+			components: 20,
+			matter:     500,
+		},
+		moduls + collectorBuilding: {
+			exoticMatter: 5,
+			moduls:       20,
+		},
+		exoticMatter + collectorBuilding: {
+			structures:   5,
+			exoticMatter: 20,
+		},
+		structures + collectorBuilding: {
+			structures: 10,
+			moduls:     20,
+			components: 30,
+		},
+		// ships
+		fighters + shipBuildingMax: {
+			components: 10,
+			matter:     1000,
+		},
+		fighters + collectorBuilding: {
+			moduls:     3,
+			components: 20,
+			fabric:     1000,
+		},
 	}
+)
 
+// #############################################################################
+// #							Multiply
+// #############################################################################
+var (
 	// holds the multiplicator by level building->resource->mult
 	costMult = map[int]map[int]float64{
 		matter + collectorBuilding: {
 			fabric: 1.5,
 		},
+		// buildings
+		fabric + collectorBuilding: {
+			rareMatter: 1.5,
+			fabric:     1.5,
+		},
+		rareMatter + collectorBuilding: {
+			components: 1.5,
+			rareMatter: 1.5,
+			fabric:     1.5,
+		},
+		components + collectorBuilding: {
+			moduls:     1.5,
+			components: 1.5,
+			matter:     1.5,
+		},
+		moduls + collectorBuilding: {
+			exoticMatter: 1.5,
+			moduls:       1.5,
+		},
+		exoticMatter + collectorBuilding: {
+			structures:   1.5,
+			exoticMatter: 1.5,
+		},
+		structures + collectorBuilding: {
+			structures: 2,
+			moduls:     2,
+			components: 2,
+		},
+		// ships
+		fighters + shipBuildingMax: {
+			components: 5,
+			matter:     5,
+		},
+		fighters + collectorBuilding: {
+			moduls:     3,
+			components: 3,
+			fabric:     3,
+		},
 	}
+)
 
+// #############################################################################
+// #							Inventory
+// #############################################################################
+var (
 	// inventory cost
 	inventoryCost = map[int]map[int]float64{
 		ftrEngines: {
