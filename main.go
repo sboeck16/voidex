@@ -114,11 +114,10 @@ func gameUpdate(tick int) {
 
 		// update display
 		updateDisplay()
-
-		// show battle
-		checkAndInitiateBattle(tick)
-
 	}
+
+	// show battle
+	checkAndTickBattle(tick)
 }
 
 // #############################################################################

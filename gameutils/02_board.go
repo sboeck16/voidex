@@ -144,6 +144,23 @@ func NewBoard(width, height int) *Board {
 	return ret
 }
 
+/*
+Reset remove all objects from board and clears all chunks.
+*/
+func (b *Board) Reset() {
+	// syncing access
+	b.chunkLock.Lock()
+	b.chunks = make(map[int]map[int]*Chunk)
+	b.chunkLock.Unlock()
+
+	b.workerLock.Lock()
+	for i := 0; i < ChunkWorker; i++ {
+		b.workerObjAmount[i] = 0
+		b.worker[i].reset()
+	}
+	b.workerLock.Unlock()
+}
+
 // #############################################################################
 // # 							Manage Objects
 // #############################################################################

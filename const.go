@@ -23,6 +23,20 @@ const (
 // #############################################################################
 
 const (
+
+	// Factions
+	// --------
+	// OwnerNeutral does not interact
+	factionNeutral = gameutils.OwnerNeutral
+	// OwnerPlayer is player faction
+	factionPlayer = gameutils.OwnerPlayer
+	// OwnerLost pirates, lost and random
+	factionLost = gameutils.OwnerLost
+	// OwnerRobots nano robot faction
+	factionRobots = gameutils.OnwerRobots
+	// OwnerPlant void growth
+	factionPlants = gameutils.OwnerPlants
+
 	// ressources
 	// ----------
 	// matter, ...

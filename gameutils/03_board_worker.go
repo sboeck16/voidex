@@ -23,6 +23,18 @@ type boardWorker struct {
 }
 
 /*
+Resets object queue.
+*/
+func (bw *boardWorker) reset() {
+
+	bw.objLock.Lock()
+	defer bw.objLock.Unlock()
+
+	bw.objHead = nil
+	bw.objTail = nil
+}
+
+/*
 startup method
 */
 func (bw *boardWorker) work() {
