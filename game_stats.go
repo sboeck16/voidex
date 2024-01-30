@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 /*
 GameStats holds all values for a voidex idle game. Used to import and export
 game states.
@@ -54,6 +56,9 @@ func NewGameStats() *GameStats {
 	ret.CapitalLoadOut = GetDefaultCapLoadout()
 	ret.StationLoadout = GetDefaultStaLoadout()
 
+	// add ship cost from basic inventory
+	baseCost[fighters] = calcInventoryCost(ret.FighterLoadOut.Inventory)
+
 	return ret
 }
 
@@ -76,4 +81,18 @@ StationLoadout holds the mobile station class.
 */
 type StationLoadout struct {
 	Inventory map[int]int
+}
+
+func calcInventoryCost(inv map[int]int) map[int]float64 {
+	ret := map[int]float64{}
+	for item, amount := range inv {
+		if costs, ok := inventoryCost[item]; ok {
+			for res, val := range costs {
+				ret[res] += val * float64(amount)
+			}
+		} else {
+			checkError(fmt.Errorf("no cost for inv item %+v", item))
+		}
+	}
+	return ret
 }

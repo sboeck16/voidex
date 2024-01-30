@@ -13,11 +13,11 @@ var (
 		},
 		rareMatter: {
 			fabric: 5,
-			matter: 20,
+			matter: 10,
 		},
 		components: {
 			rareMatter: 5,
-			fabric:     20,
+			fabric:     10,
 			matter:     100,
 		},
 		moduls: {
@@ -36,29 +36,29 @@ var (
 
 		// buildings
 		matter + collectorBuilding: {
-			fabric: 5,
+			fabric: 3,
 		},
 		fabric + collectorBuilding: {
-			rareMatter: 5,
-			fabric:     10,
+			rareMatter: 3,
+			fabric:     5,
 		},
 		rareMatter + collectorBuilding: {
-			components: 5,
-			rareMatter: 10,
-			fabric:     100,
+			components: 3,
+			rareMatter: 5,
+			fabric:     50,
 		},
 		components + collectorBuilding: {
-			moduls:     5,
-			components: 20,
-			matter:     500,
+			moduls:     3,
+			components: 10,
+			matter:     300,
 		},
 		moduls + collectorBuilding: {
-			exoticMatter: 5,
-			moduls:       20,
+			exoticMatter: 3,
+			moduls:       10,
 		},
 		exoticMatter + collectorBuilding: {
-			structures:   5,
-			exoticMatter: 20,
+			structures:   3,
+			exoticMatter: 10,
 		},
 		structures + collectorBuilding: {
 			structures: 10,
@@ -85,22 +85,22 @@ var (
 	// holds the multiplicator by level building->resource->mult
 	costMult = map[int]map[int]float64{
 		matter + collectorBuilding: {
-			fabric: 1.5,
+			fabric: 1.2,
 		},
 		// buildings
 		fabric + collectorBuilding: {
-			rareMatter: 1.5,
-			fabric:     1.5,
+			rareMatter: 1.2,
+			fabric:     1.2,
 		},
 		rareMatter + collectorBuilding: {
-			components: 1.5,
-			rareMatter: 1.5,
-			fabric:     1.5,
+			components: 1.2,
+			rareMatter: 1.2,
+			fabric:     1.2,
 		},
 		components + collectorBuilding: {
-			moduls:     1.5,
-			components: 1.5,
-			matter:     1.5,
+			moduls:     1.2,
+			components: 1.2,
+			matter:     1.2,
 		},
 		moduls + collectorBuilding: {
 			exoticMatter: 1.5,
@@ -138,27 +138,33 @@ var (
 			components: 1,
 			fabric:     5,
 			matter:     20,
+			buildTime:  3,
 		},
 		ftrArmor: {
-			matter: 100,
-			fabric: 20,
+			matter:    100,
+			fabric:    20,
+			buildTime: 1,
 		},
 		blaster: {
 			components: 1,
 			fabric:     10,
+			buildTime:  2,
 		},
 		missiles: {
 			components:   3,
 			exoticMatter: 1,
 			matter:       10,
+			buildTime:    3,
 		},
 		torpedos: {
 			components:   2,
 			exoticMatter: 5,
 			fabric:       20,
+			buildTime:    5,
 		},
 		CPU: {
-			moduls: 5,
+			moduls:    5,
+			buildTime: 5,
 		},
 		agilityBoost: {},
 		targetBoost:  {},

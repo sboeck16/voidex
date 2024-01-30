@@ -12,11 +12,17 @@ var (
 			ressourcesNeeded: map[int]float64{},
 			unlocksBntID: []int{
 				matter,
+				fighters + collectorBuilding,
+				fighters + collectorBuilding + collectorAdd,
+				fighters + collectorBuilding + collectorSub,
+				fighters + shipBuildingMax,
+				fighters + shipBuildingMax + collectorAdd,
+				fighters + shipBuildingMax + collectorSub,
 			},
 		},
 		{
 			ressourcesNeeded: map[int]float64{
-				matter: 10,
+				matter: 5,
 			},
 			unlocksBntID: []int{
 				matter + collectorBuilding,
@@ -27,7 +33,7 @@ var (
 		},
 		{
 			ressourcesNeeded: map[int]float64{
-				fabric: 10,
+				fabric: 5,
 			},
 			unlocksBntID: []int{
 				fabric + collectorBuilding,
@@ -38,7 +44,7 @@ var (
 		},
 		{
 			ressourcesNeeded: map[int]float64{
-				rareMatter: 10,
+				rareMatter: 5,
 			},
 			unlocksBntID: []int{
 				rareMatter + collectorBuilding,
@@ -49,14 +55,13 @@ var (
 		},
 		{
 			ressourcesNeeded: map[int]float64{
-				components: 10,
+				components: 5,
 			},
 			unlocksBntID: []int{
 				components + collectorBuilding,
 				components + collectorBuilding + collectorAdd,
 				components + collectorBuilding + collectorSub,
 				moduls,
-				// TODO FTR
 			},
 		},
 		{

@@ -26,6 +26,12 @@ func updateStats() {
 				canAfford = false
 				break
 			}
+			if max, ok := resWithMax[payRes]; ok {
+				if gameStats.Ressources[payRes] >= float64(max) {
+					gameStats.Ressources[payRes] = float64(max)
+					canAfford = false
+				}
+			}
 		}
 		if !canAfford {
 			continue
@@ -130,7 +136,8 @@ func calcCostToString(building, targetlevel int) string {
 
 	ret := []string{}
 
-	for cost, symbol := range costSymbol {
+	for cost := matter; cost <= structures; cost++ {
+		symbol := costSymbol[cost]
 		if val, ok := costs[cost]; ok {
 			ret = append(ret, symbol+costSymbolAmountDivide+
 				strconv.FormatFloat(val, costDisplayFormat, costDisplayPrec, 64))
@@ -158,7 +165,7 @@ func updateTickIncrease() {
 
 	for buildID, amountActive := range gameStats.BuildingsActive {
 		// TODO ship ressources will not work here
-		if amountActive == 0 {
+		if amountActive == 0 || buildID&shipBuildingMax > 0 {
 			continue
 		}
 
@@ -178,7 +185,13 @@ func updateTickIncrease() {
 			continue
 		}
 
+		buildDur := 1.0
+
 		for pay, amount := range baseCost[ress] {
+			if pay == buildTime {
+				buildDur = amount
+				continue
+			}
 			ressBase[pay] = amount * -1
 			ressInc[pay] = 1.0
 			ressMult[pay] = 1.0
@@ -192,9 +205,16 @@ func updateTickIncrease() {
 		newC.item = ress
 		newC.ressAdd = make(map[int]float64)
 		for r, base := range ressBase {
-			base *= float64(amountActive) / updatesPerSecond
+			base *= float64(amountActive) / (updatesPerSecond * buildDur)
 			newC.ressAdd[r] = base * ressInc[r] * ressMult[r]
 		}
 		incrDecrOnBigUpd = append(incrDecrOnBigUpd, newC)
+	}
+
+	// raise limits of limiteded ressources
+	for res := range resWithMax {
+		if val, ok := gameStats.Buildings[res+shipBuildingMax]; ok {
+			resWithMax[res] = val
+		}
 	}
 }

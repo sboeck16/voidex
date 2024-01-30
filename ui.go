@@ -38,32 +38,52 @@ func init() {
 	// all resources
 	bttnX := actionButtonSpace
 	bttnY := actionButtonNextRowSpace
-	for _, buildID := range allBuildings {
-		if buildID&collectorBuilding > 0 {
-			// add clicker
-			actionButtons[buildID-collectorBuilding] = newActionButton(
-				float64(bttnX+actionButtonAddSubWidth), float64(bttnY),
-				actionButtonWidth, actionButtonHeight,
-				buy, buildID-collectorBuilding)
-			bttnY += actionButtonNextRowSpace + actionButtonHeight
-			// sub
-			actionButtons[buildID+collectorSub] = newActionButton(
-				float64(bttnX), float64(bttnY),
-				actionButtonAddSubWidth, actionButtonHeight,
-				subActive, buildID+collectorSub)
-			// building
-			actionButtons[buildID] = newActionButton(
-				float64(bttnX+actionButtonAddSubWidth), float64(bttnY),
-				actionButtonWidth, actionButtonHeight,
-				buy, buildID)
-			// add
-			actionButtons[buildID+collectorAdd] = newActionButton(
-				float64(bttnX+actionButtonAddSubWidth+actionButtonWidth),
-				float64(bttnY),
-				actionButtonAddSubWidth, actionButtonHeight,
-				addActive, buildID+collectorAdd)
-			bttnY += actionButtonNextRowSpace + actionButtonHeight
-		}
+	for _, buildID := range allBuildingsCollectable {
+		// add clicker
+		actionButtons[buildID-collectorBuilding] = newActionButton(
+			float64(bttnX+actionButtonAddSubWidth), float64(bttnY),
+			actionButtonWidth, actionButtonHeight,
+			buy, buildID-collectorBuilding)
+		bttnY += actionButtonNextRowSpace + actionButtonHeight
+		// sub
+		actionButtons[buildID+collectorSub] = newActionButton(
+			float64(bttnX), float64(bttnY),
+			actionButtonAddSubWidth, actionButtonHeight,
+			subActive, buildID)
+		// building
+		actionButtons[buildID] = newActionButton(
+			float64(bttnX+actionButtonAddSubWidth), float64(bttnY),
+			actionButtonWidth, actionButtonHeight,
+			buy, buildID)
+		// add
+		actionButtons[buildID+collectorAdd] = newActionButton(
+			float64(bttnX+actionButtonAddSubWidth+actionButtonWidth),
+			float64(bttnY),
+			actionButtonAddSubWidth, actionButtonHeight,
+			addActive, buildID)
+		bttnY += actionButtonNextRowSpace + actionButtonHeight
+	}
+	bttnX = actionButtonSpace + actionButtonWidth + actionButtonAddSubWidth +
+		actionButtonAddSubWidth + actionButtonColumnSpace
+	bttnY = actionButtonNextRowSpace
+	for _, buildID := range allBuildingsShips {
+		// sub
+		actionButtons[buildID+collectorSub] = newActionButton(
+			float64(bttnX), float64(bttnY),
+			actionButtonAddSubWidth, actionButtonHeight,
+			subActive, buildID)
+		// building
+		actionButtons[buildID] = newActionButton(
+			float64(bttnX+actionButtonAddSubWidth), float64(bttnY),
+			actionButtonWidth, actionButtonHeight,
+			buy, buildID)
+		// add
+		actionButtons[buildID+collectorAdd] = newActionButton(
+			float64(bttnX+actionButtonAddSubWidth+actionButtonWidth),
+			float64(bttnY),
+			actionButtonAddSubWidth, actionButtonHeight,
+			addActive, buildID)
+		bttnY += actionButtonNextRowSpace + actionButtonHeight
 	}
 
 }
@@ -124,6 +144,9 @@ func updateDisplay() {
 			msg := statDisplayText[resID] + statDisplayDivide
 			msg += strconv.FormatFloat(gameStats.Ressources[resID],
 				statDisplayFormat, statDisplayPrec, 64)
+			if val, ok := resWithMax[resID]; ok {
+				msg += statDisplayMaxResDivide + strconv.Itoa(val)
+			}
 			statDisplayButtons[resID].SetText(5, 15, msg)
 			continue
 		}
@@ -179,21 +202,27 @@ func actionButtonHandle(action, with int) func(*gameutils.ClickObject, eb.MouseB
 	case buy:
 		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { checkAndBuy(with) }
 	case addActive:
-		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { actionActivateBuilding(with) }
+		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { activateBuilding(with) }
 	case subActive:
-		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { actionActivateBuilding(with) }
+		return func(_ *gameutils.ClickObject, _ eb.MouseButton) { deactivateBuilding(with) }
 	}
 	return nil
 }
 
-func actionActivateBuilding(building int) {
+func activateBuilding(building int) {
 
-	deb("clicked +", building)
-	updateButtons()
+	if gameStats.BuildingsActive[building] < gameStats.Buildings[building] {
+		gameStats.BuildingsActive[building]++
+		updateButtons()
+		updateTickIncrease()
+	}
 }
 
 func deactivateBuilding(building int) {
 
-	deb("clicked -", building)
-	updateButtons()
+	if gameStats.BuildingsActive[building] > 0 {
+		gameStats.BuildingsActive[building]--
+		updateButtons()
+		updateTickIncrease()
+	}
 }

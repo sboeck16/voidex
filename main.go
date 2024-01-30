@@ -149,7 +149,7 @@ utility function for testing visuals and progressing. creates gamestats TODO
 func setStartUpGame() {
 	gameStats = NewGameStats()
 	for i := 0; i < maxResources; i++ {
-		gameStats.Ressources[i] = 20
+		gameStats.Ressources[i] = 100000
 	}
 }
 

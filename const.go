@@ -23,7 +23,6 @@ const (
 // #############################################################################
 
 const (
-
 	// Factions
 	// --------
 	// OwnerNeutral does not interact
@@ -36,7 +35,8 @@ const (
 	factionRobots = gameutils.OnwerRobots
 	// OwnerPlant void growth
 	factionPlants = gameutils.OwnerPlants
-
+)
+const (
 	// ressources
 	// ----------
 	// matter, ...
@@ -59,13 +59,17 @@ const (
 	stations
 	maxResources
 
+	// for things that need longer to produce
+	buildTime = 1 << 9
+
 	// buildings flag
 	collectorBuilding       = 1 << 10
 	collectorBuildingActive = 1 << 11
 	shipBuildingMax         = 1 << 12
 	collectorAdd            = 1 << 13
 	collectorSub            = 1 << 14
-
+)
+const (
 	// ship inventory
 	// --------------
 	// Fighter
@@ -89,7 +93,8 @@ const (
 	docking
 	assembly
 	beams
-
+)
+const (
 	// battle states
 	noBattleState      = 0
 	runningBattleState = -1
@@ -104,7 +109,8 @@ const (
 	displayInfo
 	displayBattle
 	maxDisplayBoards
-
+)
+const (
 	// numerical boni
 	addToBase = iota
 	increaseBasePerc
@@ -161,7 +167,8 @@ var (
 		stations + shipBuildingMax:                             "fleet commands",
 	}
 
-	allBuildings = []int{
+	// first ressources, second ship, third ship max
+	allBuildingsCollectable = []int{
 		matter + collectorBuilding,
 		fabric + collectorBuilding,
 		rareMatter + collectorBuilding,
@@ -169,12 +176,21 @@ var (
 		moduls + collectorBuilding,
 		exoticMatter + collectorBuilding,
 		structures + collectorBuilding,
+	}
+	allBuildingsShips = []int{
 		fighters + collectorBuilding,
 		capitals + collectorBuilding,
 		stations + collectorBuilding,
 		fighters + shipBuildingMax,
 		capitals + shipBuildingMax,
 		stations + shipBuildingMax,
+	}
+	allBuildings = append(allBuildingsCollectable, allBuildingsShips...)
+
+	resWithMax = map[int]int{
+		fighters: 0,
+		capitals: 0,
+		stations: 0,
 	}
 )
 
@@ -195,9 +211,10 @@ const (
 	costDisplayFormat      = 'f'
 	costDisplayPrec        = 1
 
-	statDisplayDivide = ": "
-	statDisplayFormat = 'f'
-	statDisplayPrec   = 1
+	statDisplayDivide       = ": "
+	statDisplayFormat       = 'f'
+	statDisplayPrec         = 1
+	statDisplayMaxResDivide = "|"
 
 	statDisplayWidth        = 160
 	statDisplaySpace        = 10
@@ -217,6 +234,7 @@ const (
 	actionButtonHeight       = 34
 	actionButtonNextRowSpace = 5
 	actionButtonSpace        = 10
+	actionButtonColumnSpace  = 70
 )
 
 var (
