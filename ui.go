@@ -86,6 +86,10 @@ func init() {
 		bttnY += actionButtonNextRowSpace + actionButtonHeight
 	}
 
+	// action buttons like battle, story or science
+	actionButtons[buttonBattle] = newMainButton(battleButtonX, battleButtonY,
+		battleButtonW, battleButtonH, battleButtonText, initiateBattle)
+
 }
 
 /*
@@ -112,6 +116,9 @@ func updateButtons() {
 	// update display
 	for buildID, btn := range actionButtons {
 		msg := ""
+		if buildID&modeButton > 0 {
+			continue
+		}
 		if buildID < collectorBuilding {
 			msg = actionStrCollect + sp + toStringRessource[buildID]
 			msg += nl + calcCostToString(buildID, 1)
@@ -177,6 +184,17 @@ func newActionButton(
 	return ret
 }
 
+func newMainButton(x, y float64, w, h int, display string,
+	act func(_ *gameutils.ClickObject, _ eb.MouseButton)) *gameutils.Button {
+
+	ret := gameutils.NewButton(x, y, w, h, act)
+	ret.SetColorAndFont(
+		battleButtonTextCol, battleButtonBGCol, battleButtonFont)
+	ret.SetText(5, 15, display)
+	return ret
+
+}
+
 /*
 Returns buttons that can be displayed if goal is reached. utility function,
 btnlvl is not checked for out of bound in goals array!
@@ -225,4 +243,8 @@ func deactivateBuilding(building int) {
 		updateButtons()
 		updateTickIncrease()
 	}
+}
+
+func initiateBattle(_ *gameutils.ClickObject, _ eb.MouseButton) {
+	deb("BATTLE")
 }

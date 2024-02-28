@@ -70,6 +70,17 @@ const (
 	collectorSub            = 1 << 14
 )
 const (
+	// button ids
+	modeButton     = 1 << 20
+	buttonStory    = modeButton + iota
+	buttonBattle   = modeButton + iota
+	buttonScience  = modeButton + iota
+	buttonRed      = modeButton + iota
+	buttonGreen    = modeButton + iota
+	buttonBlue     = modeButton + iota
+	buttonPrestige = modeButton + iota
+)
+const (
 	// ship inventory
 	// --------------
 	// Fighter
@@ -199,6 +210,29 @@ var (
 // #############################################################################
 
 const (
+
+	// holds with and height for game, TODO
+	width  = 1600
+	height = 900
+
+	// infoboard
+	infoWidth  = 1500
+	infoHeight = 50
+	infoOffX   = 50.0
+	infoOffY   = 10.0
+
+	// buttons
+	buttonsWidth  = 500
+	buttonsHeight = 800
+	buttonsOffX   = 10.0
+	buttonsOffY   = 90.0
+
+	// main
+	mainWidth  = 1000
+	mainHeight = 500
+	mainOffX   = 580.0
+	mainOffY   = 90.0
+
 	// generic string constants
 	sp = " "
 	nl = "\n"
@@ -235,6 +269,14 @@ const (
 	actionButtonNextRowSpace = 5
 	actionButtonSpace        = 10
 	actionButtonColumnSpace  = 70
+
+	battleButtonX = actionButtonSpace + actionButtonWidth +
+		actionButtonAddSubWidth + actionButtonAddSubWidth +
+		actionButtonColumnSpace + actionButtonAddSubWidth
+	battleButtonY    = 590.0
+	battleButtonW    = 160
+	battleButtonH    = 25
+	battleButtonText = "BATTLE"
 )
 
 var (
@@ -280,4 +322,8 @@ var (
 	actionDisplayFont    = gameutils.CreateFontMust(13, 72)
 	actionDisplayBGCol   = graphics.ColorBlack
 	actionDisplayTextCol = graphics.ColorWhite
+
+	battleButtonFont    = gameutils.CreateFontMust(13, 72)
+	battleButtonBGCol   = graphics.ColorBlack
+	battleButtonTextCol = graphics.ColorWhite
 )

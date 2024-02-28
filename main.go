@@ -15,27 +15,6 @@ var (
 	incrDecrOnBigUpd = []*cost{}
 	// hold game global for easy access
 	game *gameutils.Game
-	// holds with and height for game, TODO
-	width  = 1600
-	height = 900
-
-	// infoboard
-	infoWidth  = 1500
-	infoHeight = 50
-	infoOffX   = 50.0
-	infoOffY   = 10.0
-
-	// buttons
-	buttonsWidth  = 500
-	buttonsHeight = 800
-	buttonsOffX   = 10.0
-	buttonsOffY   = 90.0
-
-	// main
-	mainWidth  = 1000
-	mainHeight = 500
-	mainOffX   = 580.0
-	mainOffY   = 90.0
 
 	// holds boards for easy access
 	boardDisplayStat *gameutils.Board
@@ -149,7 +128,10 @@ utility function for testing visuals and progressing. creates gamestats TODO
 func setStartUpGame() {
 	gameStats = NewGameStats()
 	for i := 0; i < maxResources; i++ {
-		gameStats.Ressources[i] = 100000
+		gameStats.Ressources[i] = 100
+	}
+	for _, b := range allBuildingsShips {
+		gameStats.Buildings[b] = 2
 	}
 }
 

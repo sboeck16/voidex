@@ -12,12 +12,6 @@ var (
 			ressourcesNeeded: map[int]float64{},
 			unlocksBntID: []int{
 				matter,
-				fighters + collectorBuilding,
-				fighters + collectorBuilding + collectorAdd,
-				fighters + collectorBuilding + collectorSub,
-				fighters + shipBuildingMax,
-				fighters + shipBuildingMax + collectorAdd,
-				fighters + shipBuildingMax + collectorSub,
 			},
 		},
 		{
@@ -62,6 +56,20 @@ var (
 				components + collectorBuilding + collectorAdd,
 				components + collectorBuilding + collectorSub,
 				moduls,
+				fighters + shipBuildingMax,
+				fighters + shipBuildingMax + collectorAdd,
+				fighters + shipBuildingMax + collectorSub,
+				fighters + collectorBuilding,
+				fighters + collectorBuilding + collectorAdd,
+				fighters + collectorBuilding + collectorSub,
+			},
+		},
+		{
+			ressourcesNeeded: map[int]float64{
+				fighters: 5,
+			},
+			unlocksBntID: []int{
+				buttonBattle,
 			},
 		},
 		{

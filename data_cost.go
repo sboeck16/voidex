@@ -68,12 +68,12 @@ var (
 		// ships
 		fighters + shipBuildingMax: {
 			components: 10,
-			matter:     1000,
+			matter:     100,
 		},
 		fighters + collectorBuilding: {
-			moduls:     3,
-			components: 20,
-			fabric:     1000,
+			moduls:     0.8,
+			components: 10,
+			fabric:     100,
 		},
 	}
 )
@@ -85,22 +85,22 @@ var (
 	// holds the multiplicator by level building->resource->mult
 	costMult = map[int]map[int]float64{
 		matter + collectorBuilding: {
-			fabric: 1.2,
+			fabric: 1.1,
 		},
 		// buildings
 		fabric + collectorBuilding: {
-			rareMatter: 1.2,
-			fabric:     1.2,
+			rareMatter: 1.1,
+			fabric:     1.1,
 		},
 		rareMatter + collectorBuilding: {
-			components: 1.2,
-			rareMatter: 1.2,
-			fabric:     1.2,
+			components: 1.1,
+			rareMatter: 1.1,
+			fabric:     1.1,
 		},
 		components + collectorBuilding: {
-			moduls:     1.2,
-			components: 1.2,
-			matter:     1.2,
+			moduls:     1.1,
+			components: 1.1,
+			matter:     1.1,
 		},
 		moduls + collectorBuilding: {
 			exoticMatter: 1.5,
